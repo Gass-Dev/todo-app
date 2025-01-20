@@ -1,5 +1,8 @@
 {
   "expo": {
+    "cli": {
+      "appVersionSource": "remote"
+    },
     "extra": {
       "eas": {
         "projectId": "6b42ead3-e042-4590-ab54-df6639693620"
