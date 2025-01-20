@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches: [ main ]
-    
+
 jobs:
   build_test:
     runs-on: ubuntu-latest
@@ -33,10 +33,30 @@ jobs:
           --dir ./dist \
           --site ${{ secrets.NETLIFY_SITE_ID }} \
           --auth ${{ secrets.NETLIFY_TOKEN }}
-      - name: Run e2e tests with cypress
+      - name: Run e2e tests with Cypress
         uses: cypress-io/github-action@v6
         with:
           start: yarn web
           browser: chrome
           wait-on: 'http://localhost:8081/'
           wait-on-timeout: 180
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: './coverage/lcov-report'
+
+  deploy_coverage:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    needs: build_test
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
