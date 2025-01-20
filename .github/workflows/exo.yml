@@ -33,3 +33,10 @@ jobs:
           --dir ./dist \
           --site ${{ secrets.NETLIFY_SITE_ID }} \
           --auth ${{ secrets.NETLIFY_TOKEN }}
+      - name: Run e2e tests with cypress
+        uses: cypress-io/github-action@v6
+        with:
+          start: yarn web
+          browser: chrome
+          wait-on: 'http://localhost:8081/'
+          wait-on-timeout: 180
